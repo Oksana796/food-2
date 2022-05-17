@@ -97,3 +97,52 @@ function setClock(selector, deadline) {
   }
 }
 setClock(".timer", deadline);
+
+// Modal
+
+const modalTrigger = document.querySelectorAll("[data-modal]");
+const modal = document.querySelector(".modal");
+const closeModalX = document.querySelector("[data-close]");
+
+function openModal() {
+  modal.classList.add("show");
+  modal.classList.remove("hide");
+  document.body.style.overflow = "hidden"; // no scroll
+  clearInterval(modalTimer);
+}
+
+modalTrigger.forEach((btn) => {
+  btn.addEventListener("click", openModal);
+});
+
+function closeModal() {
+  modal.classList.remove("show");
+  modal.classList.add("hide");
+  document.body.style.overflow = "";
+}
+closeModalX.addEventListener("click", closeModal);
+
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Escape") {
+    closeModal();
+  }
+});
+
+const modalTimer = setTimeout(openModal, 3000);
+
+function showModalByScroll() {
+  if (
+    window.pageYOffset + document.documentElement.clientHeight >=
+    document.documentElement.scrollHeight
+  ) {
+    openModal();
+    window.removeEventListener("scroll", showModalByScroll);
+  }
+}
+window.addEventListener("scroll", showModalByScroll);

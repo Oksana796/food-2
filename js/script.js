@@ -231,43 +231,44 @@ function postData(form) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    //spinner:
     const statusMessage = document.createElement("img");
     statusMessage.src = message.loading;
     statusMessage.style.cssText = `
       display: block;
       margin: 0 auto;
     `;
-
     form.insertAdjacentElement("afterend", statusMessage);
 
-    const request = new XMLHttpRequest();
-    request.open("POST", "server.php");
-
-    //(FormData does not need this method, but JSON need:)
-    request.setRequestHeader("Content-type", "application/json");
     const formData = new FormData(form);
 
-    // for JSON request:
-    const object = {};
-    formData.forEach(function (value, key) {
-      object[key] = value;
-    });
+    // // for JSON request:
+    // const object = {};
+    // formData.forEach(function (value, key) {
+    //   object[key] = value;
+    // });
 
-    const json = JSON.stringify(object);
+    // const json = JSON.stringify(object);
 
-    request.send(json);
-
-    request.addEventListener("load", () => {
-      if (request.status === 200) {
-        console.log(request.response);
+    fetch("server.php", {
+      method: "POST",
+      // headers: {
+      //   "Content-type": "application/json",
+      // },
+      body: formData,
+    })
+      .then((data) => data.text())
+      .then((data) => {
+        console.log(data);
         showThanksModal(message.success);
-        form.reset();
-
-        statusMessage.remove();
-      } else {
+        statusMessage.remove(); //spinner
+      })
+      .catch(() => {
         showThanksModal(message.failure);
-      }
-    });
+      })
+      .finally(() => {
+        form.reset();
+      });
   });
 }
 

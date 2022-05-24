@@ -224,10 +224,22 @@ const message = {
 };
 
 forms.forEach((item) => {
-  postData(item);
+  bindPostData(item);
 });
 
-function postData(form) {
+const postData = async (url, data) => {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: data,
+  });
+
+  return await res.json();
+};
+
+function bindPostData(form) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -241,21 +253,10 @@ function postData(form) {
     form.insertAdjacentElement("afterend", statusMessage);
 
     const formData = new FormData(form);
+    //formData->arr of arr->obj->JSON:
+    const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-    // for JSON request:
-    const object = {};
-    formData.forEach(function (value, key) {
-      object[key] = value;
-    });
-
-    fetch("server.php", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(object),
-    })
-      .then((data) => data.text())
+    postData("http://localhost:3000/requests", json)
       .then((data) => {
         console.log(data);
         showThanksModal(message.success);
@@ -296,5 +297,5 @@ function showThanksModal(message) {
 }
 
 fetch("http://localhost:3000/menu")
-  .then((data) => data.json())
-  .then((res) => console.log(res));
+  .then((res) => res.json())
+  .then((data) => console.log(data));

@@ -220,7 +220,7 @@ const forms = document.querySelectorAll("form");
 const message = {
   loading: "img/form/spinner.svg",
   success: "Thanks, we will contact you soon.",
-  failure: "Oops, something det wrong...",
+  failure: "Oops, something get wrong...",
 };
 
 forms.forEach((item) => {
@@ -242,20 +242,18 @@ function postData(form) {
 
     const formData = new FormData(form);
 
-    // // for JSON request:
-    // const object = {};
-    // formData.forEach(function (value, key) {
-    //   object[key] = value;
-    // });
-
-    // const json = JSON.stringify(object);
+    // for JSON request:
+    const object = {};
+    formData.forEach(function (value, key) {
+      object[key] = value;
+    });
 
     fetch("server.php", {
       method: "POST",
-      // headers: {
-      //   "Content-type": "application/json",
-      // },
-      body: formData,
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(object),
     })
       .then((data) => data.text())
       .then((data) => {

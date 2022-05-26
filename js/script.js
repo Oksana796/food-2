@@ -398,12 +398,29 @@ for (let i = 0; i < slides.length; i++) {
   dotsArr.push(dot);
 }
 
+function deleteNoDigits(str) {
+  +str.replace(/\D/g, "");
+}
+
+function makeActiveDot(arr) {
+  arr.forEach((dot) => (dot.style.opacity = "0.5"));
+  arr[slideIndex - 1].style.opacity = 1;
+}
+
+function addZeroToCurrSlide(arr) {
+  if (arr.length < 10) {
+    current.textContent = `0${slideIndex}`;
+  } else {
+    current.textContent = slideIndex;
+  }
+}
+
 next.addEventListener("click", () => {
   // width = '400px' so we need cut 'px'
-  if (offset === +width.slice(0, width.length - 2) * (slides.length - 1)) {
+  if (offset === deleteNoDigits(width) * (slides.length - 1)) {
     offset = 0;
   } else {
-    offset += +width.slice(0, width.length - 2);
+    offset += deleteNoDigits(width);
   }
 
   slidesField.style.transform = `translateX(-${offset}px)`;
@@ -414,22 +431,17 @@ next.addEventListener("click", () => {
     slideIndex++;
   }
 
-  if (slides.length < 10) {
-    current.textContent = `0${slideIndex}`;
-  } else {
-    current.textContent = slideIndex;
-  }
+  addZeroToCurrSlide(slides);
 
-  dotsArr.forEach((dot) => (dot.style.opacity = "0.5"));
-  dotsArr[slideIndex - 1].style.opacity = 1;
+  makeActiveDot(dotsArr);
 });
 
 prev.addEventListener("click", () => {
   // width = '400px' so we need cut 'px'
   if (offset === 0) {
-    offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+    offset = deleteNoDigits(width) * (slides.length - 1);
   } else {
-    offset -= +width.slice(0, width.length - 2);
+    offset -= deleteNoDigits(width);
   }
 
   slidesField.style.transform = `translateX(-${offset}px)`;
@@ -440,14 +452,9 @@ prev.addEventListener("click", () => {
     slideIndex--;
   }
 
-  if (slides.length < 10) {
-    current.textContent = `0${slideIndex}`;
-  } else {
-    current.textContent = slideIndex;
-  }
+  addZeroToCurrSlide(slides);
 
-  dotsArr.forEach((dot) => (dot.style.opacity = "0.5"));
-  dotsArr[slideIndex - 1].style.opacity = 1;
+  makeActiveDot(dotsArr);
 });
 
 dotsArr.forEach((dot) => {
@@ -455,17 +462,12 @@ dotsArr.forEach((dot) => {
     let slideTo = e.target.getAttribute("data-slide-to");
 
     slideIndex = slideTo;
-    offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+    offset = deleteNoDigits(width) * (slideTo - 1);
 
     slidesField.style.transform = `translateX(-${offset}px)`;
 
-    if (slides.length < 10) {
-      current.textContent = `0${slideIndex}`;
-    } else {
-      current.textContent = slideIndex;
-    }
+    addZeroToCurrSlide(slides);
 
-    dotsArr.forEach((dot) => (dot.style.opacity = "0.5"));
-    dotsArr[slideIndex - 1].style.opacity = 1;
+    makeActiveDot(dotsArr);
   });
 });

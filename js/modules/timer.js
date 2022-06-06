@@ -1,6 +1,5 @@
-function timer() {
+function timer(id, deadline) {
   // Timer
-  let deadline = "2022-05-01";
 
   function getRemainingTime(deadline) {
     let days, hours, minutes, seconds;
@@ -13,8 +12,8 @@ function timer() {
       minutes = 0;
       seconds = 0;
     } else {
-      days = Math.floor((remainingTime / (1000 * 60 * 60 * 24)) % 24);
-      hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 60);
+      days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+      hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
       minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
       seconds = Math.floor((remainingTime / 1000) % 60);
     }
@@ -60,7 +59,7 @@ function timer() {
       }
     }
   }
-  setClock(".timer", deadline);
+  setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

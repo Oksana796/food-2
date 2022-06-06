@@ -1,8 +1,13 @@
-function tabs() {
+function tabs(
+  tabsSelector,
+  tabsContentSelector,
+  tabsParentSelector,
+  activeClass
+) {
   // Tab (preview)
-  const tabsParent = document.querySelector(".tabheader__items");
-  const tabs = document.querySelectorAll(".tabheader__item");
-  const tabsContent = document.querySelectorAll(".tabcontent");
+  const tabsParent = document.querySelector(tabsParentSelector);
+  const tabs = document.querySelectorAll(tabsSelector);
+  const tabsContent = document.querySelectorAll(tabsContentSelector);
 
   function hideTabContent() {
     tabsContent.forEach((tab) => {
@@ -12,18 +17,19 @@ function tabs() {
     });
 
     tabs.forEach((tab) => {
-      tab.classList.remove("tabheader__item_active");
+      tab.classList.remove(activeClass);
     });
   }
 
   function showTabContent(i = 1) {
     tabsContent[i].classList.add("show", "fade");
     tabsContent[i].classList.remove("hide");
-    tabs[i].classList.add("tabheader__item_active");
+    tabs[i].classList.add(activeClass);
   }
 
   tabsParent.addEventListener("click", (e) => {
-    if (e.target && e.target.classList.contains("tabheader__item")) {
+    //without dot
+    if (e.target && e.target.classList.contains(tabsSelector.slice(1))) {
       tabs.forEach((tab, i) => {
         if (e.target === tab) {
           hideTabContent();
@@ -37,4 +43,4 @@ function tabs() {
   showTabContent();
 }
 
-module.exports = tabs;
+export default tabs;
